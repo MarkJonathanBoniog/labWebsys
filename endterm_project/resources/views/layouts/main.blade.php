@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard')</title>
     <link href="{{ asset('vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -77,6 +79,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <h4>Tranfer Credential System</h4>
+            <hr class="mx-3">
             <ul class="nav flex-column">
                 @if (Auth::user()->role == "staff")
                 <li class="nav-item">
@@ -98,16 +101,16 @@
                     <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::is('admin.records') ? 'active' : '' }}" href="#">Record List</a>
+                    <a class="nav-link {{ Route::is('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">Record List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::is('admin.audit') ? 'active' : '' }}" href="#">Staff Audit Tracing</a>
+                    <a class="nav-link {{ Route::is('admin.audit') ? 'active' : '' }}" href="{{ route('admin.audit') }}">Staff Audit Tracing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::is('admin.programs') ? 'active' : '' }}" href="#">Manage Programs</a>
+                    <a class="nav-link {{ Route::is('admin.systemSettings') ? 'active' : '' }}" href="{{ route('admin.systemSettings') }}">Manage System Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::is('admin.settings') ? 'active' : '' }}" href="#">User Settings</a>
+                    <a class="nav-link {{ Route::is('admin.settings') ? 'active' : '' }}" href="{{ route('admin.settings') }}">User Settings</a>
                 </li>
                 @endif
 

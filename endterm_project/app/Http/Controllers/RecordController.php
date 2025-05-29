@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -163,15 +164,42 @@ class RecordController extends Controller
         if ($request->filled('program')) {
             $query->where('program', $request->program);
         }
-        if ($request->filled('year')) {
-            $query->where('year', $request->year);
+        if ($request->filled('from_date')) {
+    $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+        if ($request->filled('semester')) {
+            $query->where('semester', $request->semester);
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('sex', $request->gender);
+        }
+
+        if ($request->filled('schoolyear')) {
+            $query->where('schoolyear', $request->schoolyear);
+        }
+
+        if ($request->filled('name')) {
+            $search = $request->name;
+            $query->where(function ($q) use ($search) {
+                $q->where('fname', 'like', "%$search%")
+                ->orWhere('mname', 'like', "%$search%")
+                ->orWhere('lname', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('staff')) {
+            $query->where('user_id', $request->staff);
         }
 
         $records = $query->latest()->paginate(15);
 
         $programs = Record::distinct()->pluck('program');
-        $years = Record::distinct()->pluck('year')->sortDesc();
+        $staffUsers = User::where('role', 'staff')->get();
 
-        return view('staff.index', compact('records', 'programs', 'years'));
+        return view('staff.index', compact('records', 'programs', 'staffUsers'));
     }
 }

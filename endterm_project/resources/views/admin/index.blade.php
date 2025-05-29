@@ -6,9 +6,7 @@
 <div class="mt-4">
     <h3 class="mb-4">Record List</h3>
     
-    <p>This shows a smart-filtered table of records done through the system. You may access a record by clicking on them. Click the button below to create a new entry of transfer credential record</p>
-    
-    <a href="{{ route('staff.record.generate') }}" class="btn btn-success mb-4">Create new record</a>
+    <p>Monitor and manage all records made on the system as an administrator.</p>
 
     <hr class="mx-2">
 
@@ -106,6 +104,8 @@
     </form>
 
     <!-- Record Table -->
+     <hr id="list">
+     <h5>Record Listing</h5>
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
@@ -166,6 +166,17 @@
                     }
                 });
             });
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+            const url = new URL(window.location.href);
+            const hasParams = url.searchParams.toString().length > 0;
+
+            if (hasParams) {
+                const target = document.getElementById('list');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
         });
     </script>
 @endsection

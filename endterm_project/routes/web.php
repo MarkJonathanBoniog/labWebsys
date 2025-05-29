@@ -22,6 +22,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     //admin side
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/records', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/record/{record_id}', [AdminController::class, 'showRecordView'])->name('admin.record.view');
+    Route::get('/admin/settings', [AdminController::class, 'editProfile'])->name('admin.settings');
+    Route::post('/admin/settings', [AdminController::class, 'updateProfile'])->name('admin.settings.update');
+    Route::get('/admin/audit', [AdminController::class, 'auditAdmin'])->name('admin.audit');
+    Route::get('/admin/audit-tracing/result', [AdminController::class, 'generateAuditReport'])->name('admin.auditTracing.result');
+    Route::get('/admin/system/settings', [AdminController::class, 'systemSettings'])->name('admin.systemSettings');
+    Route::post('/admin/program/store', [AdminController::class, 'storeProgram'])->name('admin.program.store');
+    Route::put('/admin/program/update/{id}', [AdminController::class, 'updateProgram'])->name('admin.program.update');
+    Route::delete('/admin/program/delete/{id}', [AdminController::class, 'destroyProgram'])->name('admin.program.destroy');
+    Route::post('/admin/system/settings/upload-images', [AdminController::class, 'uploadImages'])->name('admin.systemSettings.uploadImages');
+
     //staff side
     Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
     Route::get('/staff/generating-record', [StaffController::class, 'generateRecord'])->name('staff.record.generate');
@@ -35,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/staff/settings', [StaffController::class, 'editProfile'])->name('staff.settings');
     Route::post('/staff/settings', [StaffController::class, 'updateProfile'])->name('staff.settings.update');
     Route::get('/staff/audit', [StaffController::class, 'auditStaff'])->name('staff.audit');
+    Route::get('/staff/audit-tracing/result', [StaffController::class, 'generateAuditReport'])->name('staff.auditTracing.result');
 });
 
 Route::get('/certGrad', function(){

@@ -1,7 +1,5 @@
 @extends('layouts.main')
 
-@section("title", "User Settings")
-
 @section('content')
 <div class="mt-4">
     <h3>Account Settings</h3>

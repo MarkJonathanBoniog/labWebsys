@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string("fname")->index();
             $table->string("mname");
             $table->string("lname")->index();
-            $table->string("sex")->nullable(); //male or female
+            $table->string("sex")->nullable(); //Male or Female or Other
             $table->string("semester")->nullable(); //1st or 2nd
             $table->string("schoolyear")->nullable(); //eg. 2025-2026
             $table->string("program")->index();//will not be related to programs in code, but what's in the program table will be added in here

@@ -13,6 +13,7 @@
 @if ($record->number && $record->refnumber)
     <div class="row g-3 mb-4">
         {{-- Record Number Card (Pastel Blue) --}}
+        {{-- Record Number Card (Pastel Blue) --}}
         <div class="col-md-4">
             <div class="card text-dark" style="background-color: #d0e7ff;">
                 <div class="card-body">
@@ -269,7 +270,7 @@
 @endif
 @if ($record->status === 'Ready' || ($readonly && $record->status === 'Completed'))
     <hr class="my-4">
-    <div class="d-flex justify-content-center gap-3 mb-3" style="max-width: 800px; margin: 0 auto;">
+    <div class="d-flex justify-content-center gap-3 mb-3" style="max-width: 600px; margin: 0 auto;">
     <a href="#" class="btn btn-outline-warning flex-fill text-center">Preview Certificate</a>
     <a href="#" class="btn btn-outline-primary flex-fill text-center">Print Certificate</a>
     @if (!$readonly)
