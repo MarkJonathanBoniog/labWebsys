@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Undergraduate Transfer Credentials</title>
+    <title>Transfer Credentials</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 16px;
             margin: 40px;
             line-height: 1.6;
         }
@@ -31,7 +30,7 @@
             margin-top: 30px;
         }
         .col {
-            width: 48%;
+            width: 50%;
             text-align: center;
         }
         header img, footer img {
@@ -40,23 +39,32 @@
         }
     </style>
 </head>
+@php
+    $headerImage = file_exists(public_path('images/header.png')) 
+        ? asset('images/header.png') 
+        : asset('images/header.jpg');
+
+    $footerImage = file_exists(public_path('images/footer.png')) 
+        ? asset('images/footer.png') 
+        : asset('images/footer.jpg');
+@endphp
 <body>
 
+    <!-- HEADER IMAGE -->
     <header>
-        <img src="{{ asset('images/header-undergrad.png') }}" alt="Header Image">
+        <img src="{{ $headerImage }}" alt="Header Image">
     </header>
 
     <div class="section">
-        <h2 class="center bold">OFFICE OF THE REGISTRAR</h2>
-        <p class="small right"><em>TC PSU-UC No. {{ $tcno }} {{ $year }}</em></p>
+        <p class="small right"><em>TC PSU-UC No. {{ $tcno }} s.{{ $year }}</em></p>
         <p>TO WHOM IT MAY CONCERN:</p>
         <p>
-            This is to certify that <span class=" underline">{{ $name }}</span> of 
-            <span class=" underline">{{ $address }}</span>, a <span class="underline">{{ $sy }}</span> year <span class="underline"> {{ $program }} </span> of this university, 
-            is hereby granted <span class="">TRANSFER CREDENTIALS</span> this 
-            <span class="">{{ $day }}</span> day of 
-            <span class="">{{ $month }}</span>, 
-            <span class="">{{ $year }}</span>.
+            This is to certify that <span class="bold underline">{{ $name }}</span> of 
+            <span class="bold underline">{{ $address }}</span>, graduate of this university, 
+            is hereby granted <span class="bold">TRANSFER CREDENTIALS</span> this 
+            <span class="bold">{{ $day }}</span> day of 
+            <span class="bold">{{ $month }}</span>, 
+            <span class="bold">{{ $year }}</span>.
         </p>
         <p>
             Transcript of Record of the above student will be forwarded upon the request of the school where he/she transferred.
@@ -66,21 +74,16 @@
 
         <div class="right">
             <p class="bold underline">{{ $registrarName ?? 'MARICEL A. BONGOLAN, MIT' }}</p>
-            <p style="margin-right: 60px;">Registrar I</p>
+            <p style="margin-right: 60px;">Registrar</p>
         </div>
 
-        <p class="small"><em>NOT VALID WITHOUT <br> COLLEGE SEAL</em></p>
+        <p class="small"><em>NOT VALID WITHOUT <br> UNIVERSITY SEAL</em></p>
     </div>
-        <hr >
+
     <div class="section">
         <div class="center">
             <p>_______________________________________________ <br> Name of School/College/University</p>
             <p>_______________________________________________ <br> Address</p>
-            
-            <div class="right">
-                <p>_________________</p>
-                <p style="margin-right: 60px;"> Date</p>
-            </div>
         </div>
         <br>
         <p>The Registrar<br>Pangasinan State University<br>Urdaneta Campus, Urdaneta City</p>
@@ -93,7 +96,7 @@
             <span class="bold underline">{{ $year }}</span>.
         </p>
 
-                <div class="row">
+        <div class="row">
             <div class="col">
                 <p>WITH MY CONSENT:</p>
             </div>
@@ -115,12 +118,13 @@
                 <p>Title</p>
             </div>
         </div>
-        <p class="small">Email #: _____________________</p>
+        <p class="bold">Contact #: _____________________</p>
     </div>
-
+    <p class="small bold right"><em>Note: This document is issued only once. Please return it if unused.</em></p>
+    <!-- FOOTER IMAGE -->
     <footer>
-        <img src="{{ asset('images/footer-undergrad.png') }}" alt="Footer Image">
-        <p class="small right"><em><strong>Note: This document is issued only once. Please return it if unused.</strong></em></p>
+        <img src="{{ $footerImage }}" alt="Footer Image">
+        
     </footer>
 
 </body>

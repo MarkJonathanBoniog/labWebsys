@@ -161,11 +161,16 @@ class AdminController extends Controller
         if ($schoolYearFilter) {
             $statusQuery->where('schoolyear', $schoolYearFilter);
         }
+        if ($staffIdFilter) {
+            $statusQuery->where('user_id', $staffIdFilter);
+        }
         $statusCounts = $statusQuery->select('status', DB::raw('COUNT(*) as count'))
             ->groupBy('status')
             ->get()
             ->pluck('count', 'status')
             ->toArray();
+
+        
 
         // Prepare status data for pie chart
         $completed = $statusCounts['Completed'] ?? 0;
@@ -177,6 +182,9 @@ class AdminController extends Controller
         $programQuery = Record::query();
         if ($schoolYearFilter) {
             $programQuery->where('schoolyear', $schoolYearFilter);
+        }
+        if ($staffIdFilter) {
+            $programQuery->where('user_id', $staffIdFilter);
         }
         $recordsPerProgram = $programQuery->select('program', DB::raw('COUNT(*) as count'))
             ->groupBy('program')
@@ -191,6 +199,9 @@ class AdminController extends Controller
         if ($schoolYearFilter) {
             $genderQuery->where('schoolyear', $schoolYearFilter);
         }
+        if ($staffIdFilter) {
+            $genderQuery->where('user_id', $staffIdFilter);
+        }
         $recordsPerGender = $genderQuery->select('sex', DB::raw('COUNT(*) as count'))
             ->groupBy('sex')
             ->orderBy('sex')
@@ -203,6 +214,9 @@ class AdminController extends Controller
         $semesterQuery = Record::query();
         if ($schoolYearFilter) {
             $semesterQuery->where('schoolyear', $schoolYearFilter);
+        }
+        if ($staffIdFilter) {
+            $semesterQuery->where('user_id', $staffIdFilter);
         }
         $recordsPerSemester = $semesterQuery->select(
                 DB::raw("COALESCE(NULLIF(semester, ''), 'Unspecified') as semester_label"),
@@ -314,23 +328,51 @@ class AdminController extends Controller
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
-
         $rules = [];
+        $messages = [];
 
         // Detect which form was submitted
         if ($request->filled('fname') || $request->filled('lname') || $request->filled('email')) {
             $rules = [
                 'fname' => 'required|string|max:255',
+                'mname' => 'nullable|string|max:255',
                 'lname' => 'required|string|max:255',
+                'title' => 'nullable|string|max:255',
                 'email' => 'required|email|unique:users,email,' . $user->id,
+            ];
+
+            $messages = [
+                'fname.required' => 'First name is required.',
+                'fname.string' => 'First name must be a valid string.',
+                'fname.max' => 'First name may not be longer than 255 characters.',
+
+                'mname.string' => 'Middle name must be a valid string.',
+                'mname.max' => 'Middle name may not be longer than 255 characters.',
+
+                'lname.required' => 'Last name is required.',
+                'lname.string' => 'Last name must be a valid string.',
+                'lname.max' => 'Last name may not be longer than 255 characters.',
+
+                'title.string' => 'Title must be a valid string.',
+                'title.max' => 'Title may not be longer than 255 characters.',
+
+                'email.required' => 'Email address is required.',
+                'email.email' => 'Please enter a valid email address.',
+                'email.unique' => 'This email is already taken.',
             ];
         } elseif ($request->filled('password')) {
             $rules = [
                 'password' => 'required|confirmed|min:8',
             ];
+
+            $messages = [
+                'password.required' => 'Password is required.',
+                'password.confirmed' => 'Passwords do not match.',
+                'password.min' => 'Password must be at least 8 characters.',
+            ];
         }
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -344,7 +386,9 @@ class AdminController extends Controller
         } else {
             $user->update([
                 'fname' => $request->fname,
+                'mname' => $request->mname,
                 'lname' => $request->lname,
+                'title' => $request->title,
                 'email' => $request->email,
             ]);
             return back()->with('success', 'Profile updated successfully.');
@@ -441,7 +485,7 @@ class AdminController extends Controller
             }
         }
 
-        return view('admin.auditTracingResult', [
+        $viewData = [
             'data' => $data,
             'totals' => $totals,
             'semester' => $request->semester === 'both' ? 'Both Semesters' : ucfirst($request->semester) . ' Semester',
@@ -450,7 +494,15 @@ class AdminController extends Controller
             'includeGenders' => $includeGenders,
             'schoolyear' => $request->year,
             'range' => $request->range,
-        ]);
+        ];
+
+        if ($request->input('action') === 'pdf') {
+            $filename = 'Audit Report - ' . str_replace('-', '_', $request->year) . '.pdf';
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('staff.auditTracingResult', $viewData)->setPaper('a4', 'landscape');
+            return $pdf->download($filename);
+        }
+
+        return view('staff.auditTracingResult', $viewData);
     }
 
     public function systemSettings()

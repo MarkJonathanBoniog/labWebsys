@@ -12,7 +12,7 @@ class Record extends Model
     protected $fillable = [
         'user_id', 'hasOtr', 'hasForm', 'number', 'refnumber', 'status',
         'fname', 'mname', 'lname', 'sex', 'semester', 'program',
-        'transferfrom', 'transferto', 'isUndergrad','yearGraduated', 'year', 'claimed'
+        'transferfrom', 'transferto', 'isUndergrad','yearGraduated', 'year', 'claimed', 'address',
     ];
 
     protected $casts = [

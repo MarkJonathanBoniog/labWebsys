@@ -70,7 +70,10 @@
             <label class="form-check-label" for="include_genders"><strong>Include Genders Columns To The Table</strong></label>
         </div>
 
-        <button type="submit" class="btn btn-primary">Generate Report</button>
+        <div class="d-flex justify-content-center gap-3 mb-3" style="max-width: 800px; margin: 0 auto;">
+            <button type="submit" name="action" value="view" class="btn btn-primary">Preview Report</button>
+            <button type="submit" name="action" value="pdf" class="btn btn-success">Download PDF</button>
+        </div>
     </form>
 <script>
 function toggleManualRange(radio) {

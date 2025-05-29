@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\AuditTracingController;
 
 Route::get('/', function () {
     return redirect()->route("login");
@@ -48,8 +49,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/staff/settings', [StaffController::class, 'updateProfile'])->name('staff.settings.update');
     Route::get('/staff/audit', [StaffController::class, 'auditStaff'])->name('staff.audit');
     Route::get('/staff/audit-tracing/result', [StaffController::class, 'generateAuditReport'])->name('staff.auditTracing.result');
+    Route::get('/record/{id}/certificate/preview', [RecordController::class, 'previewCertificate'])->name('record.certificate.preview');
+
+    //audit and certificates
+    Route::get('/audit-tracing/download', [AuditTracingController::class, 'downloadAuditPdf'])->name('staff.auditTracing.download');
+    Route::get('/records/{id}/certificate/preview', [RecordController::class, 'previewCertificate'])->name('certificate.preview');
+    Route::get('/records/{id}/certificate/print', [RecordController::class, 'printCertificate'])->name('certificate.print');
 });
 
-Route::get('/certGrad', function(){
-    return view("staff.certGraduate");
-});
+// Route::get('/certGrad', function(){
+//     return view("staff.certGraduate");
+// });

@@ -92,11 +92,19 @@
         </tfoot>
     </table>
 
-    <div class="row">
-        <div class="col"><p><strong>Prepared by:</strong><br>HANNA MIKAELA B. GARCES<br>Clerk</p></div>
-        <div class="col"><p><strong>Checked by:</strong><br>MARICEL A. BONGOLAN, MIT<br>Registrar I</p></div>
-        <div class="col"><p><strong>Noted by:</strong><br>ROY C. FERRER, Ph.D.<br>Campus Executive Director</p></div>
-    </div>
+    <table style="width: 100%; text-align: center; border-collapse: collapse; border: none;">
+    <tr>
+        <td style="width: 33%; border: none;">
+        <strong>Prepared by:</strong><br>HANNA MIKAELA B. GARCES<br>Clerk
+        </td>
+        <td style="width: 33%; border: none;">
+        <strong>Checked by:</strong><br>MARICEL A. BONGOLAN, MIT<br>Registrar I
+        </td>
+        <td style="width: 33%; border: none;">
+        <strong>Noted by:</strong><br>ROY C. FERRER, Ph.D.<br>Campus Executive Director
+        </td>
+    </tr>
+    </table>
 
 </body>
 </html>

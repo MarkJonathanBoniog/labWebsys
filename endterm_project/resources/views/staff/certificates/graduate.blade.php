@@ -2,24 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Transfer Credentials</title>
+    <title>Graduate Transfer Credentials</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
+            margin: 20px;
+            line-height: 1.3;
+            font-size: 11px;
         }
         .center { text-align: center; }
         .right { text-align: right; }
         .left { text-align: left; }
-        .section { margin-bottom: 40px; }
+        .section { margin-bottom: 10px; }
         .bold { font-weight: bold; }
         .underline { text-decoration: underline; }
-        .small { font-size: 0.9em; }
+        .small { font-size: 9px; }
         .field-line {
             border-bottom: 1px solid #000;
             display: inline-block;
-            min-width: 250px;
+            min-width: 200px;
             margin-bottom: 4px;
         }
         .spacer { height: 20px; }
@@ -27,27 +28,43 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
+            margin-top: 10px;
         }
         .col {
             width: 50%;
             text-align: center;
         }
         header img, footer img {
+            max-height: 90px; /* reduce header/footer height */
             width: 100%;
-            max-height: 100px;
+            height: auto;
             object-fit: contain;
         }
     </style>
 </head>
+@php
+    // Use local file path with file:// protocol for DomPDF
+    $headerImagePath = public_path('images/header.png');
+    if (!file_exists($headerImagePath)) {
+        $headerImagePath = public_path('images/header.jpg');
+    }
+    $headerImage = 'file://' . $headerImagePath;
+
+    $footerImagePath = public_path('images/footer.png');
+    if (!file_exists($footerImagePath)) {
+        $footerImagePath = public_path('images/footer.jpg');
+    }
+    $footerImage = 'file://' . $footerImagePath;
+@endphp
 <body>
 
     <!-- HEADER IMAGE -->
     <header>
-        <img src="{{ asset('images/header.png') }}" alt="Header Image">
+        <!-- the src must change in subject to what file type is saved in the public/images/header.*, same for the footer below -->
+        <img src="{{ $headerImage }}" alt="Header Image">
     </header>
 
-    <div class="section">
+    <div style="padding: 20px;" class="section">
         <p class="small right"><em>TC PSU-UC No. {{ $tcno }} s.{{ $year }}</em></p>
         <p>TO WHOM IT MAY CONCERN:</p>
         <p>
@@ -65,7 +82,7 @@
         <div class="spacer"></div>
 
         <div class="right">
-            <p class="bold underline">{{ $registrarName ?? 'MARICEL A. BONGOLAN, MIT' }}</p>
+            <p class="bold underline">{{ $registrarName }}</p>
             <p style="margin-right: 60px;">Registrar</p>
         </div>
 
@@ -115,7 +132,7 @@
     <p class="small bold right"><em>Note: This document is issued only once. Please return it if unused.</em></p>
     <!-- FOOTER IMAGE -->
     <footer>
-        <img src="{{ asset('images/footer.png') }}" alt="Footer Image">
+        <img src="{{ $footerImage }}" alt="Footer Image">
         
     </footer>
 

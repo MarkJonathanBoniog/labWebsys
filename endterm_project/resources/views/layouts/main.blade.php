@@ -15,6 +15,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             overflow-x: auto; /* Enable horizontal scroll */
+            background-color: #ffffff;
         }
 
         .fixed-layout {
@@ -25,9 +26,35 @@
 
         .sidebar {
             width: 250px;
-            background-color: #f4f4f4;
+            background-color: #003366;
             padding: 20px;
             border-right: 1px solid #ccc;
+        }
+
+        .sidebar h4 {
+            color: #ffffff;
+            margin-top: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #ffffff; /* white links for contrast */
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #0055aa;
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            font-weight: bold;
+            color: #0d1a26; /* dark text on light background */
+            background-color: #cce6ff; /* soft blue highlight */
+            border-radius: 4px;
         }
 
         .content-wrapper {
@@ -37,7 +64,8 @@
         }
 
         .header {
-            background-color: #eee;
+            background-color: #fff9cc; /* pastel yellow */
+            color: #000000; /* dark text */
             padding: 15px 20px;
             border-bottom: 1px solid #ccc;
         }
@@ -46,30 +74,7 @@
             padding: 20px;
             flex: 1;
             overflow-y: auto;
-        }
-
-
-        .sidebar h3 {
-            margin-top: 0;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 10px;
-            margin-bottom: 10px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .sidebar a:hover {
-            background-color: #ddd;
-        }
-
-        .nav-link.active {
-            font-weight: bold;
-            color: #0d6efd;
-            background-color: #e7f1ff;
-            border-radius: 4px;
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -129,7 +134,7 @@
                 <div>
                     <div><strong>Welcome, {{ Auth::user()->fname }} {{ Auth::user()->lname }}!</strong></div>
                     <div>
-                        Role: 
+                        Transfer Credential System  
                         @if (Auth::user()->role == "admin")
                             Administrator
                         @else

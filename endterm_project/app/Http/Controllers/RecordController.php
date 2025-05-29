@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use PDF;
 use App\Models\User;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class RecordController extends Controller
@@ -123,6 +124,31 @@ class RecordController extends Controller
             'transferto'    => 'nullable|string|max:255',
             'isUndergrad'   => 'nullable|boolean',
             'yearGraduated' => 'nullable|integer|min:1950|max:' . now()->year,
+            'address'       => 'nullable|string|max:255',
+        ], [
+            'sex.required'           => 'Please select a valid sex.',
+            'sex.in'                 => 'The selected sex is invalid. Please choose Male, Female, or Other.',
+            
+            'semester.required'      => 'Please select a semester.',
+            'semester.in'            => 'The selected semester is invalid. Please choose either 1st or 2nd semester.',
+
+            'schoolyear.required'    => 'Please select an academic year.',
+            'schoolyear.string'      => 'The academic year must be a valid string value.',
+
+            'transferfrom.string'    => 'The "Transfer From" field must be a valid text.',
+            'transferfrom.max'       => 'The "Transfer From" field must not exceed 255 characters.',
+
+            'transferto.string'      => 'The "Transfer To" field must be a valid text.',
+            'transferto.max'         => 'The "Transfer To" field must not exceed 255 characters.',
+
+            'isUndergrad.boolean'    => 'The undergraduate field must be a valid true or false value.',
+
+            'yearGraduated.integer'  => 'The year graduated must be a valid year.',
+            'yearGraduated.min'      => 'The year graduated cannot be earlier than 1950.',
+            'yearGraduated.max'      => 'The year graduated cannot be later than the current year.',
+
+            'address.string'         => 'The address must be a valid text.',
+            'address.max'            => 'The address must not exceed 255 characters.',
         ]);
 
         if ($validator->fails()) {
@@ -138,12 +164,13 @@ class RecordController extends Controller
         $record->transferto    = $request->transferto;
         $record->isUndergrad   = $request->has('isUndergrad');
         $record->yearGraduated = $record->isUndergrad ? null : $request->yearGraduated;
-        $record->status       = "Ready";
+        $record->address       = $request->address;
+        $record->status        = "Ready";
 
         $record->save();
 
         return redirect()->to(url()->previous() . '#section3')
-        ->with('success3', 'Transfer credential info updated.');
+            ->with('success3', 'Transfer credential info updated.');
     }
 
     public function index(Request $request)
@@ -201,5 +228,66 @@ class RecordController extends Controller
         $staffUsers = User::where('role', 'staff')->get();
 
         return view('staff.index', compact('records', 'programs', 'staffUsers'));
+    }
+
+    public function previewCertificate($encryptedId)
+    {
+        $id = Crypt::decrypt($encryptedId);
+        $record = Record::findOrFail($id);
+
+        if (!in_array($record->status, ['Ready', 'Completed'])) {
+            abort(403, 'Certificate not available for this record.');
+        }
+
+        // Determine graduate or undergraduate view
+        if ($record->isUndergrad == '0') {
+            $view = 'staff.certificates.certGraduate';
+        } else {
+            $view = 'staff.certificates.certUnderGrad';
+        }
+
+        $name = strtoupper("{$record->fname} {$record->mname} {$record->lname}");
+        $address = $record->address ?? '__________________________';
+        $tcno = $record->refnumber;
+        $registrarName = $record->user->fname . " " . $record->user->mname . " " . $record->user->lname . ", " . $record->user->title;
+        $sy = $record->schoolyear;
+        $program = $record->program;
+        $day = now()->format('j');
+        $month = now()->format('F');
+        $year = now()->format('Y');
+
+        return view($view, compact('name', 'address', 'tcno', 'registrarName', 'day', 'month', 'year', 'sy', 'program'));
+    }
+
+    public function printCertificate($encryptedId)
+    {
+        $id = Crypt::decrypt($encryptedId);
+        $record = Record::findOrFail($id);
+
+        if (!in_array($record->status, ['Ready', 'Completed'])) {
+            abort(403, 'Certificate not available for this record.');
+        }
+
+        if ($record->isUndergrad == '0') {
+            $view = 'staff.certificates.graduate';
+        } else {
+            $view = 'staff.certificates.undergraduate';
+        }
+
+        $name = strtoupper("{$record->fname} {$record->mname} {$record->lname}");
+        $address = $record->address ?? '__________________________';
+        $tcno = $record->refnumber;
+        $registrarName = $record->user->fname . " " . $record->user->mname . " " . $record->user->lname . ", " . $record->user->title;
+        $sy = $record->schoolyear;
+        $program = $record->program;
+        $day = now()->format('j');
+        $month = now()->format('F');
+        $year = now()->format('Y');
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView($view, compact('name', 'address', 'tcno', 'registrarName', 'day', 'month', 'year', 'sy', 'program'))->setPaper('a4', 'portrait');
+
+        $filename = 'certificate_' . strtolower($record->lname) . '_' . ($record->fname) . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

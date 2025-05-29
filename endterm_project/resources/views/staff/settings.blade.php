@@ -9,7 +9,6 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
     <form method="POST" action="{{ route('staff.settings.update') }}">
         @csrf
 
@@ -20,9 +19,21 @@
         </div>
 
         <div class="mb-3">
+            <label for="mname" class="form-label">Middle Name (optional)</label>
+            <input type="text" name="mname" class="form-control @error('mname') is-invalid @enderror" value="{{ old('mname', auth()->user()->mname) }}">
+            @error('mname') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="lname" class="form-label">Last Name</label>
             <input type="text" name="lname" class="form-control @error('lname') is-invalid @enderror" value="{{ old('lname', auth()->user()->lname) }}">
             @error('lname') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title (optional)</label>
+            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title', auth()->user()->title) }}">
+            @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">

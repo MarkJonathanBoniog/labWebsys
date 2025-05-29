@@ -158,6 +158,16 @@
     @endif
     <form method="POST" action="{{ route('record.update.transfer_info', $record->id) }}">
         @csrf
+        
+        <div class="form-group mb-3">
+            <label>Address</label>
+            <input type="text" name="address" class="form-control"
+                value="{{ old('address', $record->address) }}"
+                {{ $readonly ? 'readonly' : '' }}>
+            @if ($errors->has('address'))
+                <div class="alert alert-danger mt-2">{{ $errors->first('address') }}</div>
+            @endif
+        </div>
 
         <div class="form-group mb-3">
             <label>Sex</label><br>
@@ -271,8 +281,15 @@
 @if ($record->status === 'Ready' || ($readonly && $record->status === 'Completed'))
     <hr class="my-4">
     <div class="d-flex justify-content-center gap-3 mb-3" style="max-width: 600px; margin: 0 auto;">
-    <a href="#" class="btn btn-outline-warning flex-fill text-center">Preview Certificate</a>
-    <a href="#" class="btn btn-outline-primary flex-fill text-center">Print Certificate</a>
+    <a href="{{ route('certificate.preview', Crypt::encrypt($record->id)) }}" 
+   target="_blank" 
+   class="btn btn-outline-warning flex-fill text-center">
+    Preview Certificate
+    </a>
+    <a href="{{ route('certificate.print', Crypt::encrypt($record->id)) }}" 
+   class="btn btn-outline-primary flex-fill text-center">
+    Print Certificate
+    </a>
     @if (!$readonly)
         {{-- Only show form if record status is not "Completed" or "Failed" --}}
         @if ($record->status !== 'Completed' || $record->status !== 'Failed')

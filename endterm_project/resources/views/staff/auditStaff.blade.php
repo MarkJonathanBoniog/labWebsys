@@ -11,7 +11,7 @@
         @csrf
 
         <div class="mb-3">
-            <label class="form-label">Requested on Academic Year</label>
+            <label class="form-label"><strong>All Records Requested on Academic Year</strong></label>
             <select name="year" class="form-select" required>
                 @php
                     $currentYear = now()->year;
@@ -24,7 +24,7 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Range</label><br>
+            <label class="form-label"><strong>All Records Requested Between This Time Range</strong></label><br>
             @foreach (['Whole Year', 'First Half', 'Second Half', 'First Quarter', 'Second Quarter', 'Third Quarter', 'Fourth Quarter', 'Manual'] as $r)
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="range" value="{{ $r }}" required onchange="toggleManualRange(this)">
@@ -35,17 +35,17 @@
 
         <div id="manual-range" class="row g-3 d-none">
             <div class="col-md-6">
-                <label>From</label>
+                <label><strong>From</strong></label>
                 <input type="date" name="from" class="form-control">
             </div>
             <div class="col-md-6">
-                <label>To</label>
+                <label><strong>To</strong></label>
                 <input type="date" name="to" class="form-control">
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Semester</label>
+            <label class="form-label"><strong>Filter Records By Semester</strong></label>
             <select name="semester" class="form-select" required>
                 <option value="1st">1st Semester</option>
                 <option value="2nd">2nd Semester</option>
@@ -55,10 +55,12 @@
 
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="include_genders" id="include_genders">
-            <label class="form-check-label" for="include_genders">Include Genders</label>
+            <label class="form-check-label" for="include_genders"><strong>Include Genders Column To The Table</strong></label>
         </div>
-
-        <button type="submit" class="btn btn-primary">Generate Report</button>
+        <div class="d-flex justify-content-center gap-3 mb-3" style="max-width: 800px; margin: 0 auto;">
+            <button type="submit" name="action" value="view" class="btn btn-primary">Preview Report</button>
+            <button type="submit" name="action" value="pdf" class="btn btn-success">Download PDF</button>
+        </div>
     </form>
 <script>
 function toggleManualRange(radio) {

@@ -12,7 +12,7 @@
 
     <h5>Filtering Options</h5>
     <!-- Filter Form -->
-    <form method="GET" action="{{ route('records.index') }}" class="row g-3 mb-4">
+    <form method="GET" action="{{ route('admin.index') }}" class="row g-3 mb-4">
         <div class="col-md-12">
             <label for="name" class="form-label">Name</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ request('name') }}" placeholder="Search by recepient's name">
@@ -104,8 +104,8 @@
     </form>
 
     <!-- Record Table -->
-     <hr id="list">
-     <h5>Record Listing</h5>
+    <hr id="list">
+    <h5>Record Listing</h5>
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-light">
@@ -114,6 +114,7 @@
                     <th>Transferee Name</th>
                     <th>Program</th>
                     <th>Handled By</th>
+                    <th>Year</th>
                     <th>Date Requested</th>
                     <th>Status</th>
                     <th>Claimed At</th>
@@ -136,6 +137,7 @@
                         <td>{{ $record->lname }}, {{ $record->fname }} {{ $record->mname }}</td>
                         <td>{{ $record->program }}</td>
                         <td>{{ $record->user->fname }} {{ $record->user->lname }}</td>
+                        <td>{{ $record->schoolyear }}</td>
                         <td>{{\Carbon\Carbon::parse($record->created_at)->format('F j, Y g:i A')  }}</td>
                         <td><span class="badge bg-{{ $badgeClass }}">{{ $record->status }}</span></td>
                         <td>{{ $record->claimed ? \Carbon\Carbon::parse($record->claimed)->format('F j, Y g:i A') : ($record->status == "Failed" ? 'Unavailable' : 'Not Yet') }}</td>
@@ -158,25 +160,22 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.clickable-row').forEach(function(row) {
-                row.addEventListener('click', function (e) {
-                    // prevent clicks on buttons/links from triggering row click
-                    if (e.target.tagName.toLowerCase() !== 'a' && e.target.tagName.toLowerCase() !== 'button') {
-                        window.location = this.dataset.href;
-                    }
-                });
+        // Make rows clickable
+        document.querySelectorAll('.clickable-row').forEach(function(row) {
+            row.addEventListener('click', function (e) {
+                if (e.target.tagName.toLowerCase() !== 'a' && e.target.tagName.toLowerCase() !== 'button') {
+                    window.location = this.dataset.href;
+                }
             });
         });
-        window.addEventListener('DOMContentLoaded', () => {
-            const url = new URL(window.location.href);
-            const hasParams = url.searchParams.toString().length > 0;
 
-            if (hasParams) {
-                const target = document.getElementById('list');
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
+        // Scroll to #list if filters were applied
+        const url = new URL(window.location.href);
+        const hasParams = url.searchParams.toString().length > 0;
+
+        if (hasParams && document.getElementById('list')) {
+            document.getElementById('list').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
     </script>
 @endsection
