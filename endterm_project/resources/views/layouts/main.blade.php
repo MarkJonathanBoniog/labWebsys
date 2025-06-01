@@ -83,7 +83,7 @@
 
         <!-- Sidebar -->
         <div class="sidebar">
-            <h4>Tranfer Credential System</h4>
+            <h4>Transfer Credential System</h4>
             <hr class="mx-3">
             <ul class="nav flex-column">
                 @if (Auth::user()->role == "staff")
